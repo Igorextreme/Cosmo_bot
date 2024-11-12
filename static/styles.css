@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    background: rgb(255,0,0);
+    background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(0,0,0,1) 30%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff0000;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #a70000;
+}
+
+p {
+    margin: 10px;
+}
+
+/* Estilo da imagem pulsante */
+#imagem-pulsante {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    margin-top: 50px;
+    margin: auto;
+    animation: pulsar 1s infinite;
+    border-radius: 50%;
+}
+
+@keyframes pulsar {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMO - Bot de fala</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/favicon.png">
+</head>
+
+<body>
+    <div class="container">
+        <h1>COSMO - Bot de fala</h1>
+        <button id="botao-falar">Falar</button>
+        <p id="texto-reconhecido">Texto reconhecido: </p>
+        <p id="resposta-bot">Resposta do bot: </p>
+        <img id="imagem-pulsante" src="/static/pulse.gif" alt="Imagem Pulsante" style="display: none;">
+    </div>
+
+    <script>
+        const botaoFalar = document.getElementById('botao-falar');
+        const textoReconhecido = document.getElementById('texto-reconhecido');
+        const respostaBot = document.getElementById('resposta-bot');
+        const imagemPulsante = document.getElementById('imagem-pulsante');
+
+        let synth = window.speechSynthesis;
+        let utterance;
+        let recognition; // Variável para o reconhecimento de fala
+        let reconhecendo = false; // Flag para verificar se o reconhecimento está ativo
+
+        // Função para sintetizar fala (resposta do bot)
+        function falarTexto(texto) {
+            if (synth.speaking) {
+                synth.cancel();
+            }
+            utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'pt-BR';
+            synth.speak(utterance);
+
+            // Mostra e ativa a imagem pulsante ao começar a falar
+            if (imagemPulsante) { // Verifica se a imagem existe antes de modificar seu estilo
+                imagemPulsante.style.display = "block";
+            }
+
+            utterance.onend = () => {
+                // Esconde a imagem pulsante quando termina de falar
+                if (imagemPulsante) {
+                    imagemPulsante.style.display = "none";
+                }
+            };
+        }
+
+        // Função para reconhecimento de fala
+        function iniciarReconhecimento() {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'pt-BR';
+
+            recognition.onresult = (event) => {
+                const fala = event.results[0][0].transcript;
+                textoReconhecido.textContent = "Texto reconhecido: " + fala;
+                enviarMensagem(fala);
+            };
+
+            recognition.onerror = (event) => {
+                textoReconhecido.textContent = "Erro no reconhecimento de fala: " + event.error;
+            };
+
+            recognition.onend = () => {
+                reconhecendo = false;
+                botaoFalar.textContent = "Falar";
+            };
+
+            recognition.start();
+            reconhecendo = true;
+            botaoFalar.textContent = "Parar";
+        }
+
+        // Função para enviar mensagem reconhecida para o servidor Flask
+        function enviarMensagem(mensagem) {
+            fetch('/enviar-mensagem', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mensagem: mensagem })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let respostaFiltrada = data.resposta.replace(/[*#@]/g, "");
+                    respostaBot.textContent = "Resposta do bot: " + respostaFiltrada;
+                    falarTexto(respostaFiltrada);
+                })
+                .catch(error => {
+                    respostaBot.textContent = "Erro ao enviar mensagem para o bot.";
+                    console.error('Erro:', error);
+                });
+        }
+
+        // Evento para iniciar ou parar o reconhecimento de fala ao clicar no botão
+        botaoFalar.addEventListener('click', () => {
+            if (reconhecendo) {
+                recognition.stop(); // Para o reconhecimento se já estiver ativo
+            } else {
+                iniciarReconhecimento();
+            }
+        });
+    </script>
+</body>
+
+</html>
