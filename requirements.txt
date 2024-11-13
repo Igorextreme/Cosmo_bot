@@ -1,3 +1,4 @@
 Flask==2.3.2
 google-generativeai
+google-cloud-texttospeech==2.16.1
 gunicorn
