@@ -6,7 +6,7 @@ import base64
 app = Flask(__name__)
 
 # Configurações do Google Generative AI
-google_api_key = 'AIzaSyAKUIoHkHMonZDUuKup9En0HBzeJDkAGGk'
+google_api_key = 'AIzaSyBpeObc_gAgqhjc_6GwAyezlprY5OwH5QE'
 genai.configure(api_key=google_api_key)
 
 model = genai.GenerativeModel(
