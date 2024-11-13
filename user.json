@@ -1,0 +1,14 @@
+{
+    "type": "service_account",
+    "project_id": "civil-accord-441618-e9",
+    "private_key_id": "b1b3bc59d9492bc0bfb03a3e53efe2b22be5152f",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDPj9IbeQssTnjF\nJjLuHmdVQBDg2zy+6lctEjkZPNqDx9uYLtJ3/9pW710+u/n4RVGi/qVbM8F7trRl\nN1YeYRoluES73E4lwpmuJ7DcAkRit/36IyUffp8lHSUuUBG7Hoxq6nMCSeQLXV7O\nuw6P3jTjqt98USEAVgSBLxskU0NjaZrw9MAxE+GLjKFik+l0ujS6Lh4NCORIjRXu\n23URoksyB9suMUJ4byVJZ36FadJsY9KKnTt+zhBt2N7JRg0HBIQ9m4McRK+P5MpE\nAgw9Or0D1XS8Ff/sGK5Nvxw2l3PBB/9aWYaQVG4ek4Z5qWvz4Eb79L0B+GYwOUH0\nM81LycD5AgMBAAECggEANcloQhRI7+9Z3oT6l7grQO08Mni9sh+Z/aUGROL/IT0u\nS65+ffhARVz8BeDCczLLZ/ijMxIjZoK/FqeTWoYBN5sbvK7nVWOrXXUNoMW5oPdb\nCnIHEbVHWl/GHc1D+wB8lMwyh3pMbSGCCwJwUJndjM3f4iBH9AVWX3+sgepNwTnJ\n8OV7kYC8Iu06rqhdiey22pJuUW1KdywpyOoY+njRGw+R3hu5frvpguw4snB3qmDC\n97vlCcPvG4pRd4Xko7uHXsCVmpKTW2aO2EMSh15FWfrSa/awcKiBlDgLSwZsroMt\nRtLz+LS+e3l+f4VSy4GGbYHT40SGw3MSBAoZm41rvQKBgQD0MHQ+Of1I3J9xpOLp\nP5oeP6wuyfgdzAUWvne3PjOdLqFnOBAuKnul98fPElyioShrrnu2DMfZW1kCKPcm\nhiv2syPTgXrYXbrCCH1a9lCWruN4N7+20GGqG89vQQEok2axec+lCpDH2qkYQtl4\n2hXiaD11aNoPPKQlLKZ5W9o0kwKBgQDZmdibi7o2xLPpXNdFPdlsuiFT4ePXd75L\nLOTtKhhjVss89i46z7dZSjYg6m8uNqRmvzTKBY2M7RCGocuLRELpqxaPOTo7ju4j\nzixsQxbB83HWTs7XLKyBnTFUbeVn6Ph6z/gLSEg4uFEVjJm9NtFu8obi8sG5pAKG\n3jD5tcuXwwKBgQC8Ak6N1qIwJkXQ/w4CXojv/0A36iNR9dJ5N37/JDIjNFLrIRw8\nH1OCbqt1wIJ4aLKxbe8sNNzuekmmwxm/nJBe6oCMCWYnDsuLN3Qkw/86dT8IQYwn\nWnvHuI/W7erRbeQkg1Afl2nvpmiJGHdOeENfRbkEHA3Aq4UKZj1qtRDlZwKBgHgl\nxD4OZqE69wPRKWOoBNdN5n0EauNb0Ix9m2GALrsa/1kHrPr4GgqJOV3vU7g2n4vD\n44fwjPnVI5zS1SpuZGvU9b3bIVYlU0Qd4NVeLcClhKOKHBcfKZjfjI9LprE7J4fY\nMOM54/a9frfhTDn3fKg/7U5+L40rC+If6PbX9DQ1AoGBANbupPaAwLUHDdK2VzhD\nK52DZTM+6YTgonaKwzfVkF84elXvn3oeEfxNHYA/GQkSpmkXfnDYrYtNUju2hdFU\nWnHA6LmZgUj8HTOHCqhnFjwxLDXTJ4L1HTXTCYFpHy5HX5d7aGYtU5gjkAAXbuYJ\noBXEsp/ZC6Et1V3G4NoT0K3t\n-----END PRIVATE KEY-----\n",
+    "client_email": "cosmo-467@civil-accord-441618-e9.iam.gserviceaccount.com",
+    "client_id": "101805245303548037196",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cosmo-467%40civil-accord-441618-e9.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
+  

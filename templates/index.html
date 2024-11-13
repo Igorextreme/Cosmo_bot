@@ -8,10 +8,25 @@
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="icon" href="/static/favicon.png">
 </head>
-
 <body>
     <div class="container">
         <h1>COSMO - Bot de fala</h1>
+
+        <!-- Adiciona opções de voz e gênero -->
+        <label for="selecao-voz">Escolha a voz:</label>
+        <select id="selecao-voz">
+            <option value="pt-BR-Standard-A">Voz Padrão A</option>
+            <option value="pt-BR-Standard-B">Voz Padrão B</option>
+            <option value="pt-BR-Standard-C">Voz Padrão C</option>
+            <option value="pt-BR-Standard-D">Voz Padrão D</option>
+        </select>
+
+        <label for="selecao-genero">Escolha o gênero:</label>
+        <select id="selecao-genero">
+            <option value="NEUTRAL">Neutro</option>
+            
+        </select>
+
         <button id="botao-falar">Falar</button>
         <p id="texto-reconhecido">Texto reconhecido: </p>
         <p id="resposta-bot">Resposta do bot: </p>
@@ -19,19 +34,19 @@
     </div>
 
     <script>
-        
         const botaoFalar = document.getElementById('botao-falar');
         const textoReconhecido = document.getElementById('texto-reconhecido');
         const respostaBot = document.getElementById('resposta-bot');
         const imagemPulsante = document.getElementById('imagem-pulsante');
+        const selecaoVoz = document.getElementById('selecao-voz');
+        const selecaoGenero = document.getElementById('selecao-genero');
 
         let synth = window.speechSynthesis;
         let utterance;
-        let recognition; // Variável para o reconhecimento de fala
-        let reconhecendo = false; // Flag para verificar se o reconhecimento está ativo
-
-        // Função para sintetizar fala (resposta do bot)
-        function falarTexto(texto) {
+        let recognition;
+        let reconhecendo = false;
+// Função para sintetizar fala (resposta do bot)
+function falarTexto(texto) {
             if (synth.speaking) {
                 synth.cancel();
             }
@@ -78,38 +93,42 @@
             reconhecendo = true;
             botaoFalar.textContent = "Parar";
         }
-
-        // Função para enviar mensagem reconhecida para o servidor Flask
         function enviarMensagem(mensagem) {
+            // Coleta as preferências de voz e gênero
+            const nomeVoz = selecaoVoz.value;
+            const genero = selecaoGenero.value;
+            
             fetch('/enviar-mensagem', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mensagem: mensagem })
+                body: JSON.stringify({ mensagem: mensagem, nome_voz: nomeVoz, genero: genero })
             })
-                .then(response => response.json())
-                .then(data => {
-                    let respostaFiltrada = data.resposta.replace(/[*#@]/g, "");
-                    respostaBot.textContent = "Resposta do bot: " + respostaFiltrada;
-                    falarTexto(respostaFiltrada);
-                })
-                .catch(error => {
-                    respostaBot.textContent = "Erro ao enviar mensagem para o bot.";
-                    console.error('Erro:', error);
-                });
+            .then(response => response.json())
+            .then(data => {
+                let respostaFiltrada = data.resposta.replace(/[*#@]/g, "");
+                respostaBot.textContent = "Resposta do bot: " + respostaFiltrada;
+
+                // Reproduz o áudio se estiver presente
+                if (data.audio) {
+                    const audio = new Audio("data:audio/mp3;base64," + data.audio);
+                    audio.play();
+                }
+            })
+            .catch(error => {
+                respostaBot.textContent = "Erro ao enviar mensagem para o bot.";
+                console.error('Erro:', error);
+            });
         }
 
-        // Evento para iniciar ou parar o reconhecimento de fala ao clicar no botão
         botaoFalar.addEventListener('click', () => {
             if (reconhecendo) {
-                recognition.stop(); // Para o reconhecimento se já estiver ativo
+                recognition.stop();
             } else {
                 iniciarReconhecimento();
             }
         });
-
-  
-
     </script>
 </body>
+
 
 </html>
