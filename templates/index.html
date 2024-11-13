@@ -24,7 +24,6 @@
         <label for="selecao-genero">Escolha o gênero:</label>
         <select id="selecao-genero">
             <option value="NEUTRAL">Neutro</option>
-            
         </select>
 
         <button id="botao-falar">Falar</button>
@@ -42,31 +41,33 @@
         const selecaoGenero = document.getElementById('selecao-genero');
 
         let synth = window.speechSynthesis;
-        let utterance;
         let recognition;
         let reconhecendo = false;
-// Função para sintetizar fala (resposta do bot)
-function falarTexto(texto) {
+        let audio = null; // Variável para armazenar o áudio em reprodução
+
+        // Função para sintetizar fala (resposta do bot)
+        function falarTexto(texto) {
+            // Cancela o áudio anterior, se houver
             if (synth.speaking) {
                 synth.cancel();
             }
-            utterance = new SpeechSynthesisUtterance(texto);
+
+            // Cria e configura uma nova utterance
+            const utterance = new SpeechSynthesisUtterance(texto);
             utterance.lang = 'pt-BR';
             utterance.pitch = 1; // ajuste de tom (1 é o padrão, pode ser mais baixo ou mais alto)
             utterance.rate = 1; // ajuste de velocidade (1 é o padrão, pode ser mais lento ou mais rápido)
-            synth.speak(utterance);
 
             // Mostra e ativa a imagem pulsante ao começar a falar
-            if (imagemPulsante) { // Verifica se a imagem existe antes de modificar seu estilo
-                imagemPulsante.style.display = "block";
-            }
+            imagemPulsante.style.display = "block";
 
+            // Oculta a imagem pulsante ao terminar
             utterance.onend = () => {
-                // Esconde a imagem pulsante quando termina de falar
-                if (imagemPulsante) {
-                    imagemPulsante.style.display = "none";
-                }
+                imagemPulsante.style.display = "none";
             };
+
+            // Reproduz a fala
+            synth.speak(utterance);
         }
 
         // Função para reconhecimento de fala
@@ -93,11 +94,18 @@ function falarTexto(texto) {
             reconhecendo = true;
             botaoFalar.textContent = "Parar";
         }
+
         function enviarMensagem(mensagem) {
             // Coleta as preferências de voz e gênero
             const nomeVoz = selecaoVoz.value;
             const genero = selecaoGenero.value;
-            
+
+            // Interrompe o áudio atual, se estiver tocando
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+
             fetch('/enviar-mensagem', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -110,7 +118,13 @@ function falarTexto(texto) {
 
                 // Reproduz o áudio se estiver presente
                 if (data.audio) {
-                    const audio = new Audio("data:audio/mp3;base64," + data.audio);
+                    // Interrompe qualquer áudio anterior
+                    if (audio) {
+                        audio.pause();
+                    }
+
+                    // Cria e toca o novo áudio
+                    audio = new Audio("data:audio/mp3;base64," + data.audio);
                     audio.play();
                 }
             })
@@ -120,6 +134,7 @@ function falarTexto(texto) {
             });
         }
 
+        // Inicia ou para o reconhecimento de fala ao clicar no botão
         botaoFalar.addEventListener('click', () => {
             if (reconhecendo) {
                 recognition.stop();
@@ -129,6 +144,4 @@ function falarTexto(texto) {
         });
     </script>
 </body>
-
-
 </html>
