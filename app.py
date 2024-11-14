@@ -25,8 +25,8 @@ model = genai.GenerativeModel(
 )
 chat = model.start_chat(history=[])
 
-# Inicializar cliente do Google Text-to-Speech usando o caminho da variável de ambiente
-tts_client = texttospeech.TextToSpeechClient.from_service_account_file(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+# Inicializar o cliente do Google Text-to-Speech usando o Secret File do Render
+tts_client = texttospeech.TextToSpeechClient.from_service_account_file('/etc/secrets/service_account.json')
 
 @app.route('/')
 def index():
