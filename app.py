@@ -1,27 +1,32 @@
+import os
 from flask import Flask, render_template, request, jsonify
 from google.cloud import texttospeech
-from google.oauth2 import service_account
 import google.generativeai as genai
 import base64
-import json
-import os
 
 app = Flask(__name__)
 
 # Configurações do Google Generative AI
-google_api_key = 'AIzaSyBpeObc_gAgqhjc_6GwAyezlprY5OwH5QE'
+google_api_key = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=google_api_key)
 
 model = genai.GenerativeModel(
     model_name="gemini-1.5-pro",
-    system_instruction="Você é um assistente atencioso e direto nas respostas, não fazendo mensagens longas, falando de forma clara e natural, como se tivesse uma voz real, sem soar artificial ou muito robotizado, voce deve fingir que escuta oque o usario fala pois voce e um bot de voz que consegue escutar oque o usuario diz. Evite emojis e use palavras que fluam bem em uma voz masculina para que a fala saia o menos robotizada possível, mas acessível e amigável. Se alguém perguntar quem você é ou quem te criou, diga que se chama Cosmo, criado por André e Igor, alunos da primeira turma de Análise e Desenvolvimento de Sistemas do IFPI Campus de Piripiri. Explique também que você usa a API do Gemini para responder as perguntas.",
+    system_instruction=(
+        "Você é um assistente atencioso e direto nas respostas, não fazendo mensagens longas, "
+        "falando de forma clara e natural, como se tivesse uma voz real, sem soar artificial ou "
+        "muito robotizado, voce deve fingir que escuta oque o usario fala pois voce e um bot de "
+        "voz que consegue escutar oque o usuario diz. Evite emojis e use palavras que fluam bem "
+        "em uma voz masculina para que a fala saia o menos robotizada possível, mas acessível e "
+        "amigável. Se alguém perguntar quem você é ou quem te criou, diga que se chama Cosmo, "
+        "criado por André e Igor, alunos da primeira turma de Análise e Desenvolvimento de Sistemas "
+        "do IFPI Campus de Piripiri. Explique também que você usa a API do Gemini para responder as perguntas."
+    ),
 )
 chat = model.start_chat(history=[])
 
-# Inicializar cliente do Google Text-to-Speech com credenciais a partir da variável de ambiente
-credentials_info = json.loads(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
-credentials = service_account.Credentials.from_service_account_info(credentials_info)
-tts_client = texttospeech.TextToSpeechClient(credentials=credentials)
+# Inicializar cliente do Google Text-to-Speech usando o caminho da variável de ambiente
+tts_client = texttospeech.TextToSpeechClient.from_service_account_file(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 
 @app.route('/')
 def index():
@@ -31,16 +36,19 @@ def index():
 def enviar_mensagem():
     dados = request.json
     mensagem = dados.get('mensagem')
-    nome_voz = dados.get('nome_voz', 'pt-BR-Standard-A')
+    nome_voz = dados.get('nome_voz', 'pt-BR-Standard-A')  # Define uma voz padrão
     genero = dados.get('genero', 'NEUTRAL').upper()
     
     if mensagem:
+        # Obter resposta do modelo Generative AI
         response = chat.send_message(mensagem)
         texto_resposta = response.text
         
+        # Converte a resposta em áudio usando Text-to-Speech com as preferências de voz
         audio_content = sintetizar_fala(texto_resposta, nome_voz, genero)
         
         if audio_content:
+            # Codifica o áudio em Base64 para enviar ao cliente
             audio_base64 = base64.b64encode(audio_content).decode('utf-8')
             return jsonify({"resposta": texto_resposta, "audio": audio_base64})
         
